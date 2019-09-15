@@ -7,10 +7,11 @@ var CLOUD_Y = 10;
 var FONT__Y = 40;
 var GAP__CLOUD = 10;
 var GAP__FONT = 20;
-var LEGEND__Y = 250;
+var GAP__TIME__FONT = 10;
+var LEGEND__Y = 270;
 var BAR__WIDTH = 40;
 var BAR__HEIGHT = 150;
-var BAR__Y = 80;
+var BAR__Y = 100;
 var GAP__BAR = 50;
 var generateColor = {
   name: 'hsl', hue: 236, saturation: function () {
@@ -50,16 +51,20 @@ window.renderStatistics = function (ctx, names, times) {
 
   var maxTime = getMaxTime(times);
 
+  var getCoefficient = function (arr, index) {
+    return Math.floor(arr[index]) / maxTime;
+  };
+
   for (var i = 0; i < names.length; i++) {
+    var leftIndent = CLOUD_X + GAP__BAR;
+    var leftBarPosition = BAR__WIDTH + GAP__BAR;
+
     ctx.fillStyle = '#000000';
-    ctx.fillText(names[i], CLOUD_X + GAP__BAR + (BAR__WIDTH + GAP__BAR) * i, LEGEND__Y);
+    ctx.fillText(names[i], leftIndent + leftBarPosition * i, LEGEND__Y);
+    ctx.fillText((Math.floor(times[i])).toString(), leftIndent + leftBarPosition * i, BAR__Y + (BAR__HEIGHT - BAR__HEIGHT * getCoefficient(times, i)) - GAP__TIME__FONT);
 
-    ctx.fillStyle = playerColor();
+    ctx.fillStyle = (names[i] === 'Вы') ? 'rgba(255, 0, 0, 1)' : playerColor();
 
-    if (names[i] === 'Вы') {
-      ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-    }
-
-    ctx.fillRect(CLOUD_X + GAP__BAR + (BAR__WIDTH + GAP__BAR) * i, BAR__Y + (BAR__HEIGHT - BAR__HEIGHT * (Math.floor(times[i]) / maxTime)), BAR__WIDTH, BAR__HEIGHT * (Math.floor(times[i]) / maxTime));
+    ctx.fillRect(leftIndent + leftBarPosition * i, BAR__Y + (BAR__HEIGHT - BAR__HEIGHT * getCoefficient(times, i)), BAR__WIDTH, BAR__HEIGHT * getCoefficient(times, i));
   }
 };
