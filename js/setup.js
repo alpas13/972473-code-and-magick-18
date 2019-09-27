@@ -6,8 +6,8 @@ var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161
 var EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARDS_COUNT = 4;
 var KEY_CODE = {
-  esc: 27,
-  enter: 13
+  Esc: 27,
+  Enter: 13
 };
 var WIZARD_COAT_COLOR = [
   'rgb(101, 137, 164)',
@@ -46,6 +46,7 @@ var inputWizardCoat = document.querySelector('[name=coat-color]');
 var setupWizardEyes = setupWizard.querySelector('.wizard-eyes');
 var inputWizardEyes = document.querySelector('[name=eyes-color]');
 var setupWizardFireball = document.querySelector('.setup-fireball-wrap');
+var inputWizardFireball = setupWizardFireball.querySelector('[name=fireball-color]');
 
 var randomIndex = function (arr) {
   return Math.floor(Math.random() * arr.length);
@@ -83,7 +84,7 @@ var getWizardsData = function () {
 };
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === KEY_CODE.esc) {
+  if (evt.keyCode === KEY_CODE.Esc) {
     wizardSetupCloseHandler();
   }
 };
@@ -105,13 +106,13 @@ var wizardColorChange = function (arr) {
 var init = function () {
   similarListElement.appendChild(appendSimilarWizard(getWizardsData()));
   userAvatar.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_CODE.enter) {
+    if (evt.keyCode === KEY_CODE.Enter) {
       wizardSetupOpenHandler();
     }
   });
 
   closeWizardSetupWindow.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_CODE.enter) {
+    if (evt.keyCode === KEY_CODE.Enter) {
       wizardSetupCloseHandler();
     }
   });
@@ -149,7 +150,9 @@ var init = function () {
   });
 
   setupWizardFireball.addEventListener('click', function () {
-    setupWizardFireball.style.background = wizardColorChange(WIZARD_FIREBALL_COLOR);
+    var color = wizardColorChange(WIZARD_FIREBALL_COLOR);
+    setupWizardFireball.style.background = color;
+    inputWizardFireball.value = color;
   });
   document.querySelector('.setup-similar').classList.remove('hidden');
 };
