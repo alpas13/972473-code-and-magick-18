@@ -51,11 +51,11 @@
         Вместе с ним вас ждет увлекательное приключение&hellip; </p>
     <div class="demo"></div>
     <div class="setup-open">
-        <img class="setup-open-icon" src="./img/user-1.jpg">
+        <img class="setup-open-icon" src="./img/user-1.jpg" tabindex="0">
     </div>
 </header>
 <div class="overlay setup hidden">
-    <form autocomplete="off" class="setup-wizard-form" enctype="multipart/form-data" method="post">
+    <form autocomplete="off" class="setup-wizard-form" enctype="multipart/form-data" method="post" action="https://js.dump.academy/code-and-magick">
         <div class="setup-title">
             <div class="setup-user">
                 <div class="upload">
@@ -63,10 +63,10 @@
                     <input name="avatar" type="file">
                 </div>
                 <label>
-                    <input class="setup-user-name" maxlength="25" name="username" required type="text" value="Синий Пендальф"/>
+                    <input class="setup-user-name" minlength="2" maxlength="25" name="username" required type="text" value="Синий Пендальф"/>
                 </label>
             </div>
-            <span class="setup-close">&times;</span>
+            <span class="setup-close" tabindex="0">&times;</span>
         </div>
         <div class="setup-artifacts-shop">
             <div class="setup-artifacts-cell">
