@@ -64,7 +64,7 @@
     return arr[Math.floor(Math.random() * arr.length)];
   };
 
-  var onSuccessLoad = function (wizards) {
+  var onSuccess = function (wizards) {
     similarListElement.appendChild(appendSimilarWizard(wizards.slice(0, WIZARDS_COUNT)));
     window.dialog.userModal.querySelector('.setup-similar').classList.remove('hidden');
   };
@@ -86,7 +86,7 @@
   };
 
   var init = function () {
-    window.backend.load(onSuccessLoad, onError);
+    window.backend.load(onSuccess, onError);
     userNameInput.addEventListener('invalid', function () {
       if (userNameInput.validity.tooShort) {
         userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
