@@ -29,7 +29,7 @@
   ];
 
   var similarListElement = document.querySelector('.setup-similar-list');
-  var form = window.userDialog.querySelector('.setup-wizard-form');
+  var form = window.dialog.userModal.querySelector('.setup-wizard-form');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
       .content.querySelector('.setup-similar-item');
   var userNameInput = document.querySelector('.setup-user-name');
@@ -53,7 +53,7 @@
 
   var appendSimilarWizard = function (arr) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < WIZARDS_COUNT; i++) {
+    for (var i = 0; i < arr.length; i++) {
       fragment.appendChild(renderWizard(arr[i]));
     }
 
@@ -65,12 +65,12 @@
   };
 
   var onSuccessLoad = function (wizards) {
-    similarListElement.appendChild(appendSimilarWizard(wizards));
-    window.userDialog.querySelector('.setup-similar').classList.remove('hidden');
+    similarListElement.appendChild(appendSimilarWizard(wizards.slice(0, WIZARDS_COUNT)));
+    window.dialog.userModal.querySelector('.setup-similar').classList.remove('hidden');
   };
 
   var onSuccessSave = function () {
-    window.userDialog.classList.add('hidden');
+    window.dialog.userModal.classList.add('hidden');
   };
 
   var onError = function (errorMessage) {

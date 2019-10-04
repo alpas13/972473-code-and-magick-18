@@ -5,7 +5,7 @@
     ESC: 27,
     ENTER: 13
   };
-  window.userDialog = document.querySelector('.setup');
+  var userModal = document.querySelector('.setup');
   var userAvatar = document.querySelector('.setup-open');
   var closeWizardSetupWindow = document.querySelector('.setup-close');
   var dialogHandle = document.querySelector('.upload');
@@ -19,12 +19,12 @@
   };
 
   var onWizardSetupOpen = function () {
-    window.userDialog.classList.remove('hidden');
+    userModal.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
   var onWizardSetupClose = function () {
-    window.userDialog.classList.add('hidden');
+    userModal.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
@@ -42,8 +42,8 @@
       y: moveEvt.clientY
     };
 
-    window.userDialog.style.left = (window.userDialog.offsetLeft - shift.x) + 'px';
-    window.userDialog.style.top = (window.userDialog.offsetTop - shift.y) + 'px';
+    userModal.style.left = (userModal.offsetLeft - shift.x) + 'px';
+    userModal.style.top = (userModal.offsetTop - shift.y) + 'px';
   };
 
   var omMouseUp = function (upEvt) {
@@ -55,9 +55,9 @@
     if (dragged) {
       var onPreventDefault = function (evtClick) {
         evtClick.preventDefault();
-        window.userDialog.removeEventListener('click', onPreventDefault);
+        userModal.removeEventListener('click', onPreventDefault);
       };
-      window.userDialog.addEventListener('click', onPreventDefault);
+      userModal.addEventListener('click', onPreventDefault);
     }
   };
 
@@ -96,4 +96,8 @@
   };
 
   init();
+
+  window.dialog = {
+    'userModal': userModal
+  };
 })();
