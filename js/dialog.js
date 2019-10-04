@@ -5,9 +5,8 @@
     ESC: 27,
     ENTER: 13
   };
-  var userDialog = document.querySelector('.setup');
+  var userModal = document.querySelector('.setup');
   var userAvatar = document.querySelector('.setup-open');
-  var similarListElement = document.querySelector('.setup-similar-list');
   var closeWizardSetupWindow = document.querySelector('.setup-close');
   var dialogHandle = document.querySelector('.upload');
   var startCoords = {};
@@ -15,21 +14,21 @@
 
   var onPopupEscPress = function (evt) {
     if (evt.keyCode === KeyCode.ESC) {
-      wizardSetupCloseHandler();
+      onWizardSetupClose();
     }
   };
 
-  var wizardSetupOpenHandler = function () {
-    userDialog.classList.remove('hidden');
+  var onWizardSetupOpen = function () {
+    userModal.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscPress);
   };
 
-  var wizardSetupCloseHandler = function () {
-    userDialog.classList.add('hidden');
+  var onWizardSetupClose = function () {
+    userModal.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscPress);
   };
 
-  var mouseMoveHandler = function (moveEvt) {
+  var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
     dragged = true;
 
@@ -43,45 +42,44 @@
       y: moveEvt.clientY
     };
 
-    userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
-    userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
+    userModal.style.left = (userModal.offsetLeft - shift.x) + 'px';
+    userModal.style.top = (userModal.offsetTop - shift.y) + 'px';
   };
 
-  var mouseUpHandler = function (upEvt) {
+  var omMouseUp = function (upEvt) {
     upEvt.preventDefault();
 
-    document.removeEventListener('mousemove', mouseMoveHandler);
-    document.removeEventListener('mouseup', mouseUpHandler);
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', omMouseUp);
 
     if (dragged) {
-      var clickPreventDefaultHandler = function (evtClick) {
+      var onPreventDefault = function (evtClick) {
         evtClick.preventDefault();
-        userDialog.removeEventListener('click', clickPreventDefaultHandler);
+        userModal.removeEventListener('click', onPreventDefault);
       };
-      userDialog.addEventListener('click', clickPreventDefaultHandler);
+      userModal.addEventListener('click', onPreventDefault);
     }
   };
 
   var init = function () {
-    similarListElement.appendChild(window.appendSimilarWizard(window.getWizardsData()));
     userAvatar.addEventListener('keydown', function (evt) {
       if (evt.keyCode === KeyCode.ENTER) {
-        wizardSetupOpenHandler();
+        onWizardSetupOpen();
       }
     });
 
     closeWizardSetupWindow.addEventListener('keydown', function (evt) {
       if (evt.keyCode === KeyCode.ENTER) {
-        wizardSetupCloseHandler();
+        onWizardSetupClose();
       }
     });
 
     userAvatar.addEventListener('click', function () {
-      wizardSetupOpenHandler();
+      onWizardSetupOpen();
     });
 
     closeWizardSetupWindow.addEventListener('click', function () {
-      wizardSetupCloseHandler();
+      onWizardSetupClose();
     });
 
     dialogHandle.addEventListener('mousedown', function (evt) {
@@ -92,10 +90,14 @@
         y: evt.clientY
       };
 
-      document.addEventListener('mousemove', mouseMoveHandler);
-      document.addEventListener('mouseup', mouseUpHandler);
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', omMouseUp);
     });
   };
 
   init();
+
+  window.dialog = {
+    'userModal': userModal
+  };
 })();
