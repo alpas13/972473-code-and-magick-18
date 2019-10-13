@@ -1,72 +1,50 @@
 'use strict';
 
 (function () {
-  var WIZARDS_COUNT = 4;
-
-  var WIZARD_COAT_COLOR = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
-    'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
-    'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'
-  ];
-
-  var WIZARD_EYES_COLOR = [
-    'black',
-    'red',
-    'blue',
-    'yellow',
-    'green'
-  ];
-
-  var WIZARD_FIREBALL_COLOR = [
-    '#ee4830',
-    '#30a8ee',
-    '#5ce6c0',
-    '#e848d5',
-    '#e6e848'
-  ];
-
-  var similarListElement = document.querySelector('.setup-similar-list');
   var form = window.dialog.userModal.querySelector('.setup-wizard-form');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template')
-      .content.querySelector('.setup-similar-item');
   var userNameInput = document.querySelector('.setup-user-name');
-  var setupWizard = document.querySelector('.setup-wizard');
-  var setupWizardCoat = setupWizard.querySelector('.wizard-coat');
-  var inputWizardCoat = document.querySelector('[name=coat-color]');
-  var setupWizardEyes = setupWizard.querySelector('.wizard-eyes');
-  var inputWizardEyes = document.querySelector('[name=eyes-color]');
-  var setupWizardFireball = document.querySelector('.setup-fireball-wrap');
-  var inputWizardFireball = setupWizardFireball.querySelector('[name=fireball-color]');
+  var wizards = [];
+  var coatColor = '';
+  var eyesColor = '';
 
-  var renderWizard = function (arr) {
-    var wizardElement = similarWizardTemplate.cloneNode(true);
+  var getRank = function (wizard) {
+    var rank = 0;
 
-    wizardElement.querySelector('.setup-similar-label').textContent = arr.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = arr.colorCoat;
-    wizardElement.querySelector('.wizard-eyes').style.fill = arr.eyesColor;
-
-    return wizardElement;
-  };
-
-  var appendSimilarWizard = function (arr) {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arr.length; i++) {
-      fragment.appendChild(renderWizard(arr[i]));
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
     }
 
-    return fragment;
+    return rank;
   };
 
-  var wizardColorChange = function (arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
+  var updateWizards = function () {
+    window.render.appendSimilarWizard(wizards.slice().sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = wizards.indexOf(left) - wizards.indexOf(right);
+      }
+      return rankDiff;
+    }));
   };
 
-  var onSuccess = function (wizards) {
-    similarListElement.appendChild(appendSimilarWizard(wizards.slice(0, WIZARDS_COUNT)));
+  window.wizard.onCoatChange = window.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
+
+  window.wizard.onEyesChange = window.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  var onSuccess = function (arr) {
+    wizards = arr;
+    window.render.appendSimilarWizard(wizards);
     window.dialog.userModal.querySelector('.setup-similar').classList.remove('hidden');
+    updateWizards();
   };
 
   var onSuccessSave = function () {
@@ -98,24 +76,6 @@
         userNameInput.setCustomValidity('');
       }
     });
-
-    setupWizardCoat.addEventListener('click', function () {
-      var color = wizardColorChange(WIZARD_COAT_COLOR);
-      setupWizardCoat.style.fill = color;
-      inputWizardCoat.value = color;
-    });
-
-    setupWizardEyes.addEventListener('click', function () {
-      var color = wizardColorChange(WIZARD_EYES_COLOR);
-      setupWizardEyes.style.fill = color;
-      inputWizardEyes.value = color;
-    });
-
-    setupWizardFireball.addEventListener('click', function () {
-      var color = wizardColorChange(WIZARD_FIREBALL_COLOR);
-      setupWizardFireball.style.background = color;
-      inputWizardFireball.value = color;
-    });
   };
 
   init();
@@ -124,6 +84,10 @@
     window.backend.save(new FormData(form), onSuccessSave, onError);
     evt.preventDefault();
   });
+
+  window.setup = {
+    updateWizards: updateWizards
+  };
 })();
 
 
